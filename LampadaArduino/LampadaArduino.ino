@@ -15,7 +15,7 @@
 #define ZUMBADOR 7
 
 // Define o tempo limite para a lâmpada e o alarme permanecerem acessos após sua ativação.
-#define LIMITE_TEMPO 6000
+#define LIMITE_TEMPO 5000
 
 // Define a distância máxima na qual o sensor de proximidade vai confirmar uma presença, em CM.
 #define DIST_PROX 10
@@ -34,8 +34,11 @@ int toneVal;
 int lm35 = A1;
 
 // Variáveis responsáveis por indicar o modo de funcionamento selecionado pelo usuário
-int px = 1; // Proximidade: 0 - Desativado; 1 - Com Alarme ; 2 - Sem Alarme
+int px = 2; // Proximidade: 0 - Desativado; 1 - Com Alarme ; 2 - Sem Alarme
 int ld = 1; // Lâmpada: 0 - Desativada ; 1 - Automático ; 2 - Ativada
+
+// Variável que recebe os valores lidos pelo módulo bluetooth
+char comando;
 
 // Inicializa o sensor de proximidade e define a distância máxima como 4 metros
 NewPing sonar(PINO_TRIGGER, PINO_ECHO, 400);
@@ -51,12 +54,18 @@ void setup(){
 }  
 
 void loop(){  
-  
+
   proximidade();
   if(ativo)
-    verificarTempo();
+    verificarTempo();  
+
+  while(Serial3.available()){
+    comando = Serial3.read();
+    if (comando  != 13 && comando != 10)
+      executaRequisicao();
+  }
   
-  delay(10);
+  delay(30); 
 }  
 
 /* Lê o valor do sensor de luminozidade, mapeia para porcentagem e age sobre a
@@ -86,8 +95,7 @@ void luminozidade(){
 
 /* Lê o valor do sensor de temperatura e envia o valor recebido por Bluetooh */
 void temperatura(){
-  Serial.print("Temperatuda: ");
-  Serial.println((float(analogRead(lm35))*5/(1023))/0.01);
+  Serial3.println((float(analogRead(lm35))*5/(1023))/0.01);
 }
 
 /* Lê o valor do sensor de proximidade três vezes (para evitar possíveis falsos positivos onde
@@ -129,9 +137,31 @@ void verificarTempo(){
     if(ld == 1)
       digitalWrite(PORTA_LED, LOW);  
     ativo = false;
+    Serial3.println("P200"); // Proximidade - OK
   }   
   
 } // verificarTempo()
+
+/* Valida e executa a requisição de acordo com os seguintes valores:
+  'T' - Retorna o valor da temperatura pelo módulo bluetooth;
+  'l' - Desativa a lâmpada;
+  'A' - Configura a Lâmpada para o modo automático;
+  'L' - Liga a lâmpada;
+  'p' - Desativa o sensor de proximidade;
+  'P' - Ativa o sensor de proximidade sem alarme;
+  'W' - Ativa o sensor de proximidade com alarme; */
+void executaRequisicao(){ 
+  switch(comando){
+    case ('T') : temperatura(); break; 
+    case ('l') : ld = 0; luminozidade(); break; 
+    case ('A') : ld = 1; digitalWrite(PORTA_LED, LOW); break; 
+    case ('L') : ld = 2; luminozidade(); break; 
+    case ('p') : px = 0; break; 
+    case ('P') : px = 2; break; 
+    case ('W') : px = 1; break; 
+    default: break;
+  }
+}
  
 void tocaAlarme(){
   for (int x=0; x<100; x++) {
