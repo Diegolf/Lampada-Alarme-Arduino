@@ -60,12 +60,13 @@ void loop(){
     verificarTempo();  
 
   while(Serial3.available()){
+    delay(10); // Evita lixo de memória
     comando = Serial3.read();
     if (comando  != 13 && comando != 10)
       executaRequisicao();
   }
   
-  delay(30); 
+  delay(25); 
 }  
 
 /* Lê o valor do sensor de luminozidade, mapeia para porcentagem e age sobre a
@@ -165,8 +166,8 @@ void executaRequisicao(){
  
 void tocaAlarme(){
   for (int x=0; x<100; x++) {
-  // convertendo de graus a radianos
-    sinVal = (sin(x*(3.1412/180)));     
+    // convertendo de graus a radianos
+    sinVal = (sin(x*(3.1415/180)));     
     toneVal = 2000+(int(sinVal*1000));
     NewTone(ZUMBADOR, toneVal);
     delay(3);
