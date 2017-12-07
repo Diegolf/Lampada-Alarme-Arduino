@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8" /> 
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+	<!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css"-->
+	<link type="text/css" rel="stylesheet" href="static/css/materialize.css"  media="screen,projection"/>
+	<link rel="stylesheet" type="text/css" href="static/css/estilos.css" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title> Controle do Arduino </title>
+</head>
+<body>
+	<main>
+		<nav>
+			<div class="nav-wrapper blue-grey darken-3">
+				<a href="index.html" class="brand-logo"><i class="material-icons">cloud</i>Controle do Arduino</a>
+				<ul class="right hide-on-med-and-down">
+					<li><a href="#!" class="btn-floating pulse blue-grey darken-1" id="link_bt_button"><i id="bt_button" class="material-icons" title="Conectar Bluetooth" >bluetooth_disabled</i></a></li>
+					<li><a href="#!"><i class="material-icons">more_vert</i></a></li>
+				</ul>
+			</div>
+		</nav>
+
+		<div class="row">
+			<div class="col s12 m6">
+				<div class="card blue-grey">
+					<div class="card-content white-text">
+						<span class="card-title center"><b>Controle da Lâmpada</b></span>
+						<ul class="collection">
+							<li class="collection-item blue-grey white-text"><i class="material-icons">flash_off</i><span>  Desativa a Lâmpada</span></li>
+							<li class="collection-item blue-grey white-text"><i class="material-icons">flash_on</i><span>  Liga a Lâmpada</span></li>
+							<li class="collection-item blue-grey white-text active"><i class="material-icons">flash_auto</i><span>  Ativa o modo Automático da Lâmpada</span></li>
+
+						</ul>
+					</div>
+					<div class="card-action center">
+						<a href="#!" class="lamp" title="Desativa a Lâmpada" value="desativa"><i class="material-icons btn-floating small cyan darken-4">flash_off</i></a>
+						<a href="#!" class="lamp" title="Liga a Lâmpada" value="acende"><i class="material-icons btn-floating small cyan darken-4">flash_on</i></a>
+						<a href="#!" class="lamp" title="Ativa o modo Automático da Lâmpada" value="automatica"><i class="material-icons btn-floating small cyan darken-3">flash_auto</i></a>
+					</div>
+				</div>
+			</div>
+			<div class="col s12 m6">
+				<div class="card blue-grey">
+					<div class="card-content white-text">
+						<span class="card-title center"><b>Controle do Sensor de Proximidade</b></span>
+						<ul class="collection">
+							<li class="collection-item blue-grey white-text"><i class="material-icons">volume_off</i><span>  Desativa o Sensor</span></li>
+							<li class="collection-item blue-grey white-text"><i class="material-icons">volume_up</i><span>  Ativa o Sensor</span></li>
+							<li class="collection-item blue-grey white-text active"><i class="material-icons">warning</i><span>  Ativa o Sensor com Alarme</span></li>
+
+						</ul>
+					</div>
+					<div class="card-action center">
+						<a href="#!" class="prox" title="Desativa o Sensor" value="desativa"><i class="material-icons btn-floating small cyan darken-4">volume_off</i></a>
+						<a href="#!" class="prox" title="Ativa o Sensor" value="ativa-sem-alarme"><i class="material-icons btn-floating small cyan darken-3">volume_up</i></a>
+						<a href="#!" class="prox" title="Ativa o Sensor com Alarme" value="ativa-com-alarme"><i class="material-icons btn-floating small cyan darken-4">warning</i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col s12 m12">
+				
+				<ul class="collapsible" data-collapsible="accordion">
+					<li>
+						<div class="collapsible-header grey darken-1 white-text"><i class="material-icons">show_chart</i><span class="card-title center"><b>Gráfico de Temperatura</b></span></div>
+						<div class="collapsible-body"><canvas id="chartTemp"></canvas></div>
+					</li>
+					<li>
+						<div class="collapsible-header grey darken-2 white-text"><i class="material-icons">show_chart</i><span class="card-title center"><b>Gráfico de Proximidade</b></span></div>
+						<div class="collapsible-body"><canvas id="chartProx"></canvas></div>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+
+	</main>
+	<footer class="page-footer blue-grey darken-4">
+		<div class="footer-copyright">
+			<div class="container center">
+				© 2017 Copyright 
+			</div>
+		</div>
+	</footer>
+
+	<!--script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script-->
+	<script type="text/javascript" src="static/js/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="static/js/materialize.js"></script>
+	<script type="text/javascript" src="static/js/Chart.js"></script>
+	<script type="text/javascript" src="static/js/script.js"></script>
+</body>
+</html>

@@ -40,6 +40,8 @@ int ld = 1; // Lâmpada: 0 - Desativada ; 1 - Automático ; 2 - Ativada
 // Variável que recebe os valores lidos pelo módulo bluetooth
 char comando;
 
+int aux = -1;
+
 // Inicializa o sensor de proximidade e define a distância máxima como 4 metros
 NewPing sonar(PINO_TRIGGER, PINO_ECHO, 400);
 
@@ -125,21 +127,30 @@ void proximidade(){
 
 /* Desliga o alarme e a Lâmpada caso o tempo de 10 segundos tenha expirado*/
 void verificarTempo(){
+
+  if (ativo == true){
+    if (px == 1){  
+      tocaAlarme();
+    }
   
-  if (px == 1){  
-    tocaAlarme();
+    unsigned long millisAtual = millis();
+  
+    // Verifica se o tempo se esgotou
+    if (millisAtual - millisAnterior > LIMITE_TEMPO){
+    //noNewTone(ZUMBADOR);
+      if(ld == 1)
+        digitalWrite(PORTA_LED, LOW);  
+      ativo = false;
+      Serial3.print('P'); // Proximidade - OK
+    }else{
+      if(comando == 'S'){
+        comando = 'r';
+        Serial3.print('A'); // ativo
+      }
+    }
+  }else{ // ativo == false
+    Serial3.print('p'); // Proximidade - not OK
   }
-
-  unsigned long millisAtual = millis();
-
-  // Verifica se o tempo se esgotou
-  if (millisAtual - millisAnterior > LIMITE_TEMPO){
-  //noNewTone(ZUMBADOR);
-    if(ld == 1)
-      digitalWrite(PORTA_LED, LOW);  
-    ativo = false;
-    Serial3.println("P200"); // Proximidade - OK
-  }   
   
 } // verificarTempo()
 
@@ -160,10 +171,35 @@ void executaRequisicao(){
     case ('p') : px = 0; break; 
     case ('P') : px = 2; break; 
     case ('W') : px = 1; break; 
+    case ('S') : 
+      if (aux != -1){
+        px = aux;
+        aux = -1; 
+      }
+      verificarTempo(); break;
+    case ('X') : 
+      if (aux == -1){
+         aux = px; 
+         px = 0; 
+      }
+      valorProximidade();
+      break;
     default: break;
   }
 }
- 
+
+void valorProximidade(){
+  unsigned int d;
+  int c = 0;
+    
+  do{
+     d = sonar.ping_cm();
+     c++;
+  }while(d == 0 && c < 5);
+   
+  Serial3.print(d);
+}
+
 void tocaAlarme(){
   for (int x=0; x<100; x++) {
     // convertendo de graus a radianos
